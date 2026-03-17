@@ -1,0 +1,290 @@
+---
+const links = [
+  { href: "#productos", label: "Productos" },
+  { href: "#nosotros", label: "Por qué nosotros" },
+];
+---
+
+<header id="main-nav" class="nav-root">
+  <div class="nav-inner">
+    <!-- Logo -->
+    <a href="#inicio" class="nav-logo" aria-label="Inicio">
+      <img
+        src="/C&A.webp"
+        alt="Clavos y Alambres Rosario"
+        class="nav-logo-img"
+        width="120"
+        height="48"
+      />
+    </a>
+
+    <!-- Links desktop -->
+    <nav class="nav-links" aria-label="Navegación principal">
+      {
+        links.map((l) => (
+          <a href={l.href} class="nav-link">
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- CTA desktop -->
+    <a href="#contacto" class="nav-cta">Consultá</a>
+
+    <!-- Hamburger mobile -->
+    <button
+      id="nav-toggle"
+      class="nav-hamburger"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+    {
+      links.map((l) => (
+        <a href={l.href} class="mobile-link">
+          {l.label}
+        </a>
+      ))
+    }
+    <a href="#contacto" class="mobile-cta">Consultá</a>
+  </div>
+</header>
+
+<style>
+  .nav-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      backdrop-filter 0.3s ease;
+    border-bottom: 1px solid transparent;
+  }
+
+  /* Estado scrolled — se activa por JS */
+  .nav-root.scrolled {
+    background-color: rgba(15, 23, 42, 0.97);
+    border-color: rgba(27, 42, 74, 0.8);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  /* Logo */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .nav-logo-img {
+    height: 2.75rem;
+    width: auto;
+    object-fit: contain;
+    /* convierte el webp a blanco puro — funciona hasta tener PNG transparente */
+    filter: brightness(0) invert(1);
+  }
+
+
+  /* Links */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+  }
+
+  .nav-link {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    border-radius: 2px;
+    transition: color 0.15s;
+  }
+
+  .nav-link:hover {
+    color: #f9fafb;
+  }
+
+  /* CTA */
+  .nav-cta {
+    flex-shrink: 0;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: #d97706;
+    border: 2px solid #d97706;
+    border-radius: 3px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+
+  .nav-cta:hover {
+    background-color: transparent;
+    color: #d97706;
+  }
+
+  /* Hamburger */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0.35rem;
+    background: none;
+    border: 1px solid rgba(107, 114, 128, 0.4);
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    height: 2px;
+    background-color: #f9fafb;
+    border-radius: 1px;
+    transition:
+      transform 0.2s,
+      opacity 0.2s;
+  }
+
+  /* Hamburger → X cuando abierto */
+  .nav-hamburger[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav-hamburger[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-hamburger[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    padding: 1rem 1.5rem 1.25rem;
+    background-color: rgba(15, 23, 42, 0.98);
+    border-top: 1px solid rgba(27, 42, 74, 0.8);
+    gap: 0.25rem;
+  }
+
+  .mobile-menu.open {
+    display: flex;
+  }
+
+  .mobile-link {
+    padding: 0.75rem 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(107, 114, 128, 0.15);
+    transition: color 0.15s;
+  }
+
+  .mobile-link:hover {
+    color: #f9fafb;
+  }
+
+  .mobile-cta {
+    margin-top: 0.75rem;
+    display: block;
+    text-align: center;
+    padding: 0.85rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: #d97706;
+    border: 2px solid #d97706;
+    border-radius: 3px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+
+  .mobile-cta:hover {
+    background-color: transparent;
+    color: #d97706;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav-links,
+    .nav-cta {
+      display: none;
+    }
+
+    .nav-hamburger {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  const nav = document.getElementById("main-nav")!;
+  const toggle = document.getElementById("nav-toggle")!;
+  const menu = document.getElementById("mobile-menu")!;
+
+  // Scroll: transparente → sólido
+  const onScroll = () => {
+    if (window.scrollY > 40) {
+      nav.classList.add("scrolled");
+    } else {
+      nav.classList.remove("scrolled");
+    }
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Hamburger toggle
+  toggle.addEventListener("click", () => {
+    const open = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!open));
+    menu.setAttribute("aria-hidden", String(open));
+    menu.classList.toggle("open", !open);
+  });
+
+  // Cerrar menu al hacer click en un link
+  menu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      toggle.setAttribute("aria-expanded", "false");
+      menu.setAttribute("aria-hidden", "true");
+      menu.classList.remove("open");
+    });
+  });
+</script>
