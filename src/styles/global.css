@@ -12,6 +12,11 @@
   --font-weight-headline: 800;
 }
 
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(217,119,6,0.4); }
+  50% { box-shadow: 0 0 22px rgba(217,119,6,0.75); }
+}
+
 @keyframes spotlight {
   0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
   100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
@@ -116,12 +121,16 @@
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
   }
 
   .btn-accent:hover {
     background-color: transparent;
     color: var(--color-accent);
+  }
+
+  .btn-accent--glow {
+    animation: glow-pulse 2.5s ease-in-out infinite;
   }
 
   .btn-outline {
