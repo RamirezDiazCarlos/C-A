@@ -4,3 +4,9 @@ main = "worker.ts"
 
 [assets]
 directory = "./dist"
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
