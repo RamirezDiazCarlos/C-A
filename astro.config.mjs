@@ -5,7 +5,7 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   output: 'static',
-  site: 'https://clavosyalambresrosario.com.ar',
+  site: 'https://clavosyalambres.com.ar',
   integrations: [
     sitemap(),
     react(),

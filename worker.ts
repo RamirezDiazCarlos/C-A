@@ -45,7 +45,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'Web C&A Rosario <onboarding@resend.dev>',
+      from: 'Web C&A Rosario <consultas@clavosyalambres.com.ar>',
       to: ['Clavosyalambres_rosario@hotmail.com'],
       subject: `Nueva consulta de ${nombre}`,
       text: `Nueva consulta desde la web:\n\n${emailText}`,
