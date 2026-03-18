@@ -1,6 +1,4 @@
 ---
-// Action apuntando al Worker de Cloudflare (placeholder)
-const WORKER_URL = 'https://contact-worker.distribuidora-car.workers.dev';
 ---
 
 <section id="contacto" style="background-color: #111827; padding: 6rem 0;">
@@ -222,8 +220,6 @@ const WORKER_URL = 'https://contact-worker.distribuidora-car.workers.dev';
         "
       >
         <form
-          method="POST"
-          action={WORKER_URL}
           id="contact-form"
           style="display: flex; flex-direction: column; gap: 1.25rem;"
         >
@@ -332,7 +328,7 @@ const WORKER_URL = 'https://contact-worker.distribuidora-car.workers.dev';
               id="mensaje"
               name="mensaje"
               rows="4"
-              placeholder="Ej: Necesito cotización de 500 kg de clavos 2.5" galvanizados y 200 kg de alambre negro 17..."
+              placeholder="Ej: 500 kg de clavos galvanizados 2.5 pulgadas, 200 kg de alambre negro nro 17..."
               style="
                 width: 100%;
                 padding: 0.75rem 1rem;
@@ -355,6 +351,7 @@ const WORKER_URL = 'https://contact-worker.distribuidora-car.workers.dev';
           <!-- Submit -->
           <button
             type="submit"
+            id="submit-btn"
             class="btn-accent"
             style="width: 100%; text-align: center; cursor: pointer; border: 3px solid #D97706;"
           >
@@ -364,9 +361,54 @@ const WORKER_URL = 'https://contact-worker.distribuidora-car.workers.dev';
           <p style="font-size: 0.75rem; color: #6B7280; text-align: center;">
             Te respondemos en menos de 24 hs hábiles.
           </p>
+
+          <!-- Mensajes de estado -->
+          <div id="form-success" style="display:none; padding: 1rem; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.4); border-radius: 4px; color: #4ade80; text-align: center; font-weight: 600;">
+            ¡Consulta enviada! Te respondemos a la brevedad.
+          </div>
+          <div id="form-error" style="display:none; padding: 1rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.4); border-radius: 4px; color: #f87171; text-align: center; font-weight: 600;">
+            Hubo un error al enviar. Por favor escribinos por WhatsApp.
+          </div>
         </form>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const successEl = document.getElementById('form-success') as HTMLElement;
+  const errorEl = document.getElementById('form-error') as HTMLElement;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+
+    const data = Object.fromEntries(new FormData(form));
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (json.success) {
+        successEl.style.display = 'block';
+        form.reset();
+      } else {
+        errorEl.style.display = 'block';
+      }
+    } catch {
+      errorEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Enviar consulta';
+    }
+  });
+</script>
 
