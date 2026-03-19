@@ -13,6 +13,15 @@ const categoriasOrden: Categoria[] = [
   'Postes y Varillas',
 ];
 
+const descripcionCategoria: Partial<Record<Categoria, string>> = {
+  'Alambres Rurales': 'Alambres para campo Acindar Fortín e Invencible en medidas 16/14 y 17/15. Rollos de 1000 m. También manea, rienda, boyero y varillas galvanizadas. Precio mayorista y minorista.',
+  'Alambre de Púas': 'Alambre de púa Super Bagual en rollos de 500 m. Alta resistencia para cercos rurales. Consulte precio por cantidad.',
+  'Alambres de Construcción': 'Alambres galvanizados y recocidos Acindar para obras. Calibres n°12, n°14 y del 17 al 24. Venta por rollo, bobina y al peso.',
+  'Clavos': 'Clavos punta París, espiralados, cajoneros y cabeza de plomo. Venta al por mayor y menor. Consulte medida y precio.',
+  'Tejidos': 'Tejido romboidal y tejido chanchero en diferentes medidas y alturas. Consulte disponibilidad y precio mayorista.',
+  'Postes y Varillas': 'Postes metálicos y varillas galvanizadas Acindar para cercos rurales. Diferentes medidas disponibles.',
+};
+
 const porCategoria = categoriasOrden
   .map((cat) => ({
     nombre: cat,
@@ -42,17 +51,20 @@ const porCategoria = categoriasOrden
     <div style="display: flex; flex-direction: column; gap: 3.5rem;">
       {porCategoria.map((grupo) => (
         <div>
-          <div style="
-            display: flex; align-items: center; gap: 1rem;
-            margin-bottom: 1.25rem; padding-bottom: 0.75rem;
-            border-bottom: 2px solid rgba(217,119,6,0.3);
-          ">
-            <h3 style="font-size: 1.1rem; font-weight: 800; color: #F9FAFB; text-transform: uppercase; letter-spacing: 0.06em;">
-              {grupo.nombre}
-            </h3>
-            <span style="font-size: 0.7rem; color: #6B7280; font-weight: 600; letter-spacing: 0.05em;">
-              {grupo.items.length} {grupo.items.length === 1 ? 'producto' : 'productos'}
-            </span>
+          <div style="margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 2px solid rgba(217,119,6,0.3);">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <h3 style="font-size: 1.1rem; font-weight: 800; color: #F9FAFB; text-transform: uppercase; letter-spacing: 0.06em;">
+                {grupo.nombre}
+              </h3>
+              <span style="font-size: 0.7rem; color: #6B7280; font-weight: 600; letter-spacing: 0.05em;">
+                {grupo.items.length} {grupo.items.length === 1 ? 'producto' : 'productos'}
+              </span>
+            </div>
+            {descripcionCategoria[grupo.nombre] && (
+              <p style="margin: 0.4rem 0 0; font-size: 0.78rem; color: #6B7280; line-height: 1.6; max-width: 680px;">
+                {descripcionCategoria[grupo.nombre]}
+              </p>
+            )}
           </div>
 
           <div class="productos-scroll">

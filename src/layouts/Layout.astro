@@ -9,8 +9,8 @@ interface Props {
 }
 
 const {
-  title = 'Clavos y Alambres Rosario | Venta Mayor y Menor',
-  description = 'Clavos y Alambres Rosario — Distribuidora de clavos, alambres, tejidos y accesorios. Venta al por mayor y al por menor. Envíos a todo el país. Amplio catálogo y precios competitivos desde Rosario, Argentina.',
+  title = 'Alambres Acindar y Materiales para Campo y Construcción | Mayor y Menor',
+  description = 'Venta de alambres Acindar, clavos, tejidos, postes y accesorios para campo y construcción. Mayorista y minorista. Envíos a todo el país. Consultá precio y stock.',
   ogImage = '/OG.webp',
 } = Astro.props;
 
@@ -52,6 +52,33 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
     <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- JSON-LD -->
+    <script is:inline type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Store",
+      "name": "Clavos y Alambres Rosario",
+      "url": "https://clavosyalambres.com.ar",
+      "telephone": "+5493476597438",
+      "email": "Clavosyalambres_rosario@hotmail.com",
+      "description": "Venta de alambres Acindar, clavos, tejidos, postes y accesorios para campo y construcción. Mayorista y minorista con envíos a todo el país.",
+      "areaServed": "AR",
+      "priceRange": "$$",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Catálogo",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Alambres Rurales Acindar" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Alambre de Púas Super Bagual" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Alambres de Construcción Acindar" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Clavos punta París y espiralados" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Tejido Romboidal y Chanchero" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Postes Metálicos Acindar" } }
+        ]
+      }
+    }
+    </script>
 
     <!-- Google Fonts: Barlow -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
