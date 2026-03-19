@@ -144,6 +144,14 @@ export const productos: Producto[] = [
 
   // ── Tejidos ─────────────────────────────────────────────────────────────
   {
+    slug: 'tejido-romboidal',
+    nombre: 'Tejido Romboidal',
+    detalle: 'Diferentes medidas — consultar',
+    categoria: 'Tejidos',
+    imagenes: ['tejido-romboidal.webp', 'tejido-romboidal-2.webp'],
+    whatsapp: 'Hola, quiero consultar por Tejido Romboidal',
+  },
+  {
     slug: 'tejido-chanchero',
     nombre: 'Tejido Chanchero',
     detalle: 'Varias medidas — consultar',
@@ -165,7 +173,7 @@ export const productos: Producto[] = [
     slug: 'bobina-enfardadora-n15-x45kg',
     nombre: 'Bobina para Enfardadora Aceitada',
     detalle: 'n°15 / 15.5 × 45 kg',
-    categoria: 'Accesorios',
+    categoria: 'Alambres Rurales',
     imagenes: ['bobina-enfardadora-n15-x45kg.webp'],
     whatsapp: 'Hola, quiero consultar por Bobina para Enfardadora n°15 × 45kg',
   },
