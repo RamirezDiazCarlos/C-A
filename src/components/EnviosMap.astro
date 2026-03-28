@@ -1,0 +1,477 @@
+---
+
+---
+
+<section id="envios" style="background-color: #111827; padding: 6rem 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div
+      style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;"
+      class="envios-grid"
+    >
+      <!-- Columna izquierda: texto -->
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div>
+          <p
+            style="
+            display: inline-flex; align-items: center; gap: 7px;
+            margin-bottom: 1rem;
+            padding: 0.25rem 1rem;
+            font-size: 0.75rem; font-weight: 800;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: #D97706;
+            background: rgba(217,119,6,0.1);
+            border: 1px solid rgba(217,119,6,0.3);
+            border-radius: 2px;
+          "
+          >
+            <span class="envios-badge-dot"></span>
+            ENVÍOS A TODO EL PAÍS
+          </p>
+          <h2 class="section-title">
+            Desde Rosario hasta<br /><span>cada rincón</span>
+          </h2>
+          <p
+            style="margin-top: 0.75rem; color: #9CA3AF; line-height: 1.7; font-size: 0.95rem;"
+          >
+            Nuestros productos llegan a las 24 provincias de Argentina.
+            Mayorista o minorista, despachamos a todo el país.
+          </p>
+        </div>
+
+        <div
+          id="envios-counter"
+          style="
+          font-size: 0.85rem; font-weight: 700;
+          letter-spacing: 0.04em; color: #D97706;
+          min-height: 1.25rem; transition: color 0.5s;
+        "
+        >
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <div
+            style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:0.6rem 0.875rem; font-size:0.8rem; color:#6B7280; font-weight:600;"
+          >
+            <span>🚚</span><span>Envío rápido</span>
+          </div>
+          <div
+            style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:0.6rem 0.875rem; font-size:0.8rem; color:#6B7280; font-weight:600;"
+          >
+            <span>📍</span><span>Todo el país</span>
+          </div>
+        </div>
+
+        <div>
+          <button
+            id="envios-replay-btn"
+            style="display:none; background:rgba(217,119,6,0.1); border:1px solid rgba(217,119,6,0.35); color:#D97706; border-radius:2px; padding:0.4rem 1.25rem; font-size:0.75rem; font-weight:800; cursor:pointer; letter-spacing:0.1em; text-transform:uppercase;"
+          >
+            ↺ Ver animación
+          </button>
+        </div>
+      </div>
+
+      <!-- Columna derecha: mapa -->
+      <div>
+        <div
+          id="envios-map-wrap"
+          style="border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.06); background:#0a1320; position:relative;"
+        >
+          <div
+            id="envios-loading"
+            style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#334155; font-size:0.8rem;"
+          >
+            Cargando mapa…
+          </div>
+          <svg
+            id="envios-map-svg"
+            style="display:block; width:100%; aspect-ratio:400/620;"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .envios-badge-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #d97706;
+    animation: enviosBlink 1.5s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes enviosBlink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+  @media (max-width: 768px) {
+    .envios-grid {
+      grid-template-columns: 1fr !important;
+      gap: 2rem !important;
+    }
+  }
+</style>
+
+<script is:inline>
+  (async () => {
+    const d3 = await import("https://cdn.jsdelivr.net/npm/d3@7/+esm");
+    const { feature } =
+      await import("https://cdn.jsdelivr.net/npm/topojson-client@3/+esm");
+
+    const PROVINCIAS = [
+      { nombre: "Buenos Aires", coords: [-58.6, -36.5] },
+      { nombre: "CABA", coords: [-58.38, -34.6] },
+      { nombre: "Catamarca", coords: [-65.78, -28.47] },
+      { nombre: "Chaco", coords: [-59.03, -27.45] },
+      { nombre: "Chubut", coords: [-65.1, -43.3] },
+      { nombre: "Córdoba", coords: [-64.18, -31.42] },
+      { nombre: "Corrientes", coords: [-58.83, -27.47] },
+      { nombre: "Entre Ríos", coords: [-60.53, -31.73] },
+      { nombre: "Formosa", coords: [-58.18, -26.18] },
+      { nombre: "Jujuy", coords: [-65.3, -24.18] },
+      { nombre: "La Pampa", coords: [-64.29, -36.62] },
+      { nombre: "La Rioja", coords: [-66.86, -29.41] },
+      { nombre: "Mendoza", coords: [-68.84, -32.89] },
+      { nombre: "Misiones", coords: [-55.9, -27.36] },
+      { nombre: "Neuquén", coords: [-68.06, -38.95] },
+      { nombre: "Río Negro", coords: [-65.0, -41.0] },
+      { nombre: "Salta", coords: [-65.41, -24.78] },
+      { nombre: "San Juan", coords: [-68.52, -31.53] },
+      { nombre: "San Luis", coords: [-66.34, -33.3] },
+      { nombre: "Santa Cruz", coords: [-69.22, -49.5] },
+      { nombre: "Santa Fe", coords: [-60.7, -30.7] },
+      { nombre: "Sgo. del Estero", coords: [-63.26, -27.79] },
+      { nombre: "Tierra del Fuego", coords: [-67.7, -54.5] },
+      { nombre: "Tucumán", coords: [-65.22, -26.82] },
+    ];
+
+    const ROSARIO = [-60.6393, -32.9468];
+    const ACCENT = "#D97706";
+    const W = 400,
+      H = 620;
+
+    const proj = d3
+      .geoMercator()
+      .center([-65.5, -40.5])
+      .scale(700)
+      .translate([W / 2 + 22, H / 2 - 10]);
+
+    const pathGen = d3.geoPath().projection(proj);
+
+    let pulseTimer = null;
+    let arrowTimers = [];
+    let cachedFeatures = null;
+
+    function clearTimers() {
+      if (pulseTimer) clearInterval(pulseTimer);
+      arrowTimers.forEach(clearTimeout);
+      arrowTimers = [];
+    }
+
+    function drawArrowhead(g, mx, my, dx, dy) {
+      const angle = Math.atan2(dy - my, dx - mx);
+      const size = 7;
+      const left = [
+        dx - size * Math.cos(angle - Math.PI / 6),
+        dy - size * Math.sin(angle - Math.PI / 6),
+      ];
+      const right = [
+        dx - size * Math.cos(angle + Math.PI / 6),
+        dy - size * Math.sin(angle + Math.PI / 6),
+      ];
+      g.append("polygon")
+        .attr(
+          "points",
+          `${dx},${dy} ${left[0]},${left[1]} ${right[0]},${right[1]}`,
+        )
+        .attr("fill", ACCENT)
+        .attr("opacity", 0)
+        .transition()
+        .duration(120)
+        .attr("opacity", 0.9);
+    }
+
+    async function fetchFeatures() {
+      if (cachedFeatures) return cachedFeatures;
+      try {
+        const res = await fetch(
+          "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json",
+        );
+        const world = await res.json();
+        const all = feature(world, world.objects.countries);
+        const arg = all.features.find((f) => +f.id === 32);
+        if (arg) {
+          cachedFeatures = [arg];
+          return cachedFeatures;
+        }
+      } catch (e) {
+        console.warn("world-atlas falló:", e);
+      }
+      try {
+        const res2 = await fetch(
+          "https://cdn.jsdelivr.net/npm/arg-topojson@0.0.3/arg.json",
+        );
+        const topo2 = await res2.json();
+        const key = Object.keys(topo2.objects)[0];
+        cachedFeatures = feature(topo2, topo2.objects[key]).features;
+        return cachedFeatures;
+      } catch (e2) {
+        return [];
+      }
+    }
+
+    async function initMap() {
+      clearTimers();
+
+      const counter = document.getElementById("envios-counter");
+      const replayBtn = document.getElementById("envios-replay-btn");
+      const loading = document.getElementById("envios-loading");
+
+      counter.textContent = "";
+      counter.style.color = ACCENT;
+      replayBtn.style.display = "none";
+
+      const svg = d3.select("#envios-map-svg");
+      svg.selectAll("*").remove();
+      svg.attr("viewBox", `0 0 ${W} ${H}`);
+
+      // — Defs —
+      const defs = svg.append("defs");
+
+      const gf = defs
+        .append("filter")
+        .attr("id", "em-glow")
+        .attr("x", "-80%")
+        .attr("y", "-80%")
+        .attr("width", "260%")
+        .attr("height", "260%");
+      gf.append("feGaussianBlur")
+        .attr("stdDeviation", "4.5")
+        .attr("result", "blur");
+      const gm = gf.append("feMerge");
+      gm.append("feMergeNode").attr("in", "blur");
+      gm.append("feMergeNode").attr("in", "SourceGraphic");
+
+      const af = defs
+        .append("filter")
+        .attr("id", "em-aglow")
+        .attr("x", "-50%")
+        .attr("y", "-50%")
+        .attr("width", "200%")
+        .attr("height", "200%");
+      af.append("feGaussianBlur")
+        .attr("stdDeviation", "2")
+        .attr("result", "blur");
+      const am = af.append("feMerge");
+      am.append("feMergeNode").attr("in", "blur");
+      am.append("feMergeNode").attr("in", "SourceGraphic");
+
+      const bgG = defs
+        .append("radialGradient")
+        .attr("id", "em-bg")
+        .attr("cx", "50%")
+        .attr("cy", "40%")
+        .attr("r", "60%");
+      bgG.append("stop").attr("offset", "0%").attr("stop-color", "#0d2040");
+      bgG.append("stop").attr("offset", "100%").attr("stop-color", "#080f1c");
+
+      const pG = defs
+        .append("linearGradient")
+        .attr("id", "em-prov")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "0%")
+        .attr("y2", "100%");
+      pG.append("stop").attr("offset", "0%").attr("stop-color", "#1b4070");
+      pG.append("stop").attr("offset", "100%").attr("stop-color", "#0f2744");
+
+      svg
+        .append("rect")
+        .attr("width", W)
+        .attr("height", H)
+        .attr("fill", "url(#em-bg)");
+
+      loading.style.display = "flex";
+      const features = await fetchFeatures();
+      loading.style.display = "none";
+
+      if (features.length > 0) {
+        svg
+          .append("g")
+          .selectAll("path")
+          .data(features)
+          .enter()
+          .append("path")
+          .attr("d", pathGen)
+          .attr("fill", "url(#em-prov)")
+          .attr("stroke", "#2e6db4")
+          .attr("stroke-width", "0.8")
+          .attr("opacity", 0)
+          .transition()
+          .duration(600)
+          .delay((_, i) => i * 20)
+          .attr("opacity", 1);
+      }
+
+      const linesG = svg.append("g");
+      const headsG = svg.append("g");
+      const dotsG = svg.append("g");
+      const topG = svg.append("g");
+
+      const [rx, ry] = proj(ROSARIO);
+
+      function pulse() {
+        topG
+          .append("circle")
+          .attr("cx", rx)
+          .attr("cy", ry)
+          .attr("r", 7)
+          .attr("fill", "none")
+          .attr("stroke", "#38bdf8")
+          .attr("stroke-width", "1.8")
+          .attr("opacity", 0.9)
+          .transition()
+          .duration(1800)
+          .ease(d3.easeQuadOut)
+          .attr("r", 28)
+          .attr("opacity", 0)
+          .remove();
+      }
+      pulse();
+      pulseTimer = setInterval(pulse, 2000);
+
+      topG
+        .append("circle")
+        .attr("cx", rx)
+        .attr("cy", ry)
+        .attr("r", 7)
+        .attr("fill", "#1e90ff")
+        .attr("filter", "url(#em-glow)");
+      topG
+        .append("circle")
+        .attr("cx", rx)
+        .attr("cy", ry)
+        .attr("r", 3.5)
+        .attr("fill", "#e0f2fe");
+
+      const lg = topG
+        .append("g")
+        .attr("transform", `translate(${rx + 10},${ry + 5})`);
+      lg.append("rect")
+        .attr("x", -3)
+        .attr("y", -10)
+        .attr("width", 58)
+        .attr("height", 14)
+        .attr("rx", 4)
+        .attr("fill", "rgba(5,15,30,0.85)")
+        .attr("stroke", "rgba(56,189,248,0.3)")
+        .attr("stroke-width", "0.8");
+      lg.append("text")
+        .attr("fill", "#cbd5e1")
+        .attr("font-size", "9px")
+        .attr("font-weight", "800")
+        .attr("letter-spacing", "0.1em")
+        .text("ROSARIO");
+
+      let completed = 0;
+
+      PROVINCIAS.forEach((prov, i) => {
+        const [dx, dy] = proj(prov.coords);
+        const dist = Math.hypot(dx - rx, dy - ry);
+        if (dist < 8) return;
+
+        const tid = setTimeout(
+          () => {
+            const offset = (Math.random() - 0.5) * Math.min(dist * 0.15, 18);
+            const midX = (rx + dx) / 2 + offset;
+            const midY = (ry + dy) / 2 - dist * 0.18;
+            const duration = 380 + dist * 0.55;
+
+            const line = linesG
+              .append("path")
+              .attr("d", `M${rx},${ry} Q${midX},${midY} ${dx},${dy}`)
+              .attr("fill", "none")
+              .attr("stroke", ACCENT)
+              .attr("stroke-width", "1.2")
+              .attr("stroke-opacity", "0.85")
+              .attr("filter", "url(#em-aglow)");
+
+            const len = line.node().getTotalLength();
+            line
+              .attr("stroke-dasharray", len)
+              .attr("stroke-dashoffset", len)
+              .transition()
+              .duration(duration)
+              .ease(d3.easeQuadOut)
+              .attr("stroke-dashoffset", 0)
+              .on("end", () => {
+                drawArrowhead(headsG, midX, midY, dx, dy);
+
+                dotsG
+                  .append("circle")
+                  .attr("cx", dx)
+                  .attr("cy", dy)
+                  .attr("r", 6)
+                  .attr("fill", "none")
+                  .attr("stroke", ACCENT)
+                  .attr("stroke-width", "1")
+                  .attr("opacity", 0.6)
+                  .transition()
+                  .duration(600)
+                  .attr("r", 12)
+                  .attr("opacity", 0)
+                  .remove();
+
+                dotsG
+                  .append("circle")
+                  .attr("cx", dx)
+                  .attr("cy", dy)
+                  .attr("r", 2.8)
+                  .attr("fill", ACCENT)
+                  .attr("opacity", 0)
+                  .transition()
+                  .duration(200)
+                  .attr("opacity", 0.9);
+
+                completed++;
+                if (completed < PROVINCIAS.length) {
+                  counter.textContent = `Conectando provincias… ${completed}/${PROVINCIAS.length}`;
+                } else {
+                  counter.style.color = "#4ade80";
+                  counter.textContent =
+                    "✓ Enviamos a las 24 provincias de Argentina";
+                  replayBtn.style.display = "inline-block";
+                  clearInterval(pulseTimer);
+                }
+              });
+          },
+          700 + i * 130,
+        );
+
+        arrowTimers.push(tid);
+      });
+    }
+
+    document
+      .getElementById("envios-replay-btn")
+      .addEventListener("click", initMap);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          observer.disconnect();
+          initMap();
+        }
+      },
+      { threshold: 1.0 },
+    );
+    observer.observe(document.getElementById("envios-map-wrap"));
+  })();
+</script>

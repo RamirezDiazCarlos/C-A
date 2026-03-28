@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
+import { productos } from '../data/productos';
 
 interface Props {
   title?: string;
@@ -15,6 +16,60 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const siteURL = 'https://clavosyalambres.com.ar';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "name": "Clavos y Alambres Rosario",
+  "url": siteURL,
+  "telephone": "+5493476597438",
+  "email": "clavosyalambresrosario@hotmail.com",
+  "description": "Venta de alambres Acindar, clavos, tejidos, postes y accesorios para campo y construcción. Mayorista y minorista con envíos a todo el país.",
+  "areaServed": "AR",
+  "priceRange": "$$",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Catálogo de productos",
+    "itemListElement": productos.map((p, i) => {
+      const esAcindar = p.nombre.toLowerCase().includes('acindar') || (p.detalle ?? '').toLowerCase().includes('acindar');
+      return {
+        "@type": "ListItem",
+        "position": i + 1,
+        "item": {
+          "@type": "Product",
+          "name": p.nombre,
+          "description": p.detalle ? `${p.nombre} — ${p.detalle}` : `${p.nombre}. Disponible en Clavos y Alambres Rosario.`,
+          "image": `${siteURL}/Productos/${p.imagenes[0]}`,
+          "url": `${siteURL}/#productos`,
+          ...(esAcindar ? { "brand": { "@type": "Brand", "name": "Acindar" } } : {}),
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "ARS",
+            "price": "0",
+            "availability": "https://schema.org/InStock",
+            "url": `${siteURL}/#contacto`,
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "shippingRate": { "@type": "MonetaryAmount", "currency": "ARS", "value": "0" },
+              "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "AR" },
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 2, "unitCode": "DAY" },
+                "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 5, "unitCode": "DAY" }
+              }
+            },
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "applicableCountry": "AR",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
+            }
+          }
+        }
+      };
+    }),
+  },
+};
 ---
 
 <!doctype html>
@@ -54,31 +109,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="manifest" href="/favicon/site.webmanifest" />
 
     <!-- JSON-LD -->
-    <script is:inline type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Store",
-      "name": "Clavos y Alambres Rosario",
-      "url": "https://clavosyalambres.com.ar",
-      "telephone": "+5493476597438",
-      "email": "Clavosyalambres_rosario@hotmail.com",
-      "description": "Venta de alambres Acindar, clavos, tejidos, postes y accesorios para campo y construcción. Mayorista y minorista con envíos a todo el país.",
-      "areaServed": "AR",
-      "priceRange": "$$",
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Catálogo",
-        "itemListElement": [
-          { "@type": "Product", "name": "Alambres Rurales Acindar", "offers": { "@type": "Offer", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" } },
-          { "@type": "Product", "name": "Alambre de Púas Super Bagual", "offers": { "@type": "Offer", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" } },
-          { "@type": "Product", "name": "Alambres de Construcción Acindar", "offers": { "@type": "Offer", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" } },
-          { "@type": "Product", "name": "Clavos punta París y espiralados", "offers": { "@type": "Offer", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" } },
-          { "@type": "Product", "name": "Tejido Romboidal y Chanchero", "offers": { "@type": "Offer", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" } },
-          { "@type": "Product", "name": "Postes Metálicos Acindar", "offers": { "@type": "Offer", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" } }
-        ]
-      }
-    }
-    </script>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
     <!-- Google Fonts: Barlow -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
