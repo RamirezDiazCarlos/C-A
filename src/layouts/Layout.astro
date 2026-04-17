@@ -40,30 +40,14 @@ const jsonLd = {
           "@type": "Product",
           "name": p.nombre,
           "description": p.detalle ? `${p.nombre} — ${p.detalle}` : `${p.nombre}. Disponible en Clavos y Alambres Rosario.`,
-          "image": `${siteURL}/Productos/${p.imagenes[0]}`,
+          ...(p.imagenes[0] ? { "image": `${siteURL}/Productos/${p.imagenes[0]}` } : {}),
           "url": `${siteURL}/#productos`,
+          "category": p.categoria,
           ...(esAcindar ? { "brand": { "@type": "Brand", "name": "Acindar" } } : {}),
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "ARS",
-            "price": "0",
-            "availability": "https://schema.org/InStock",
-            "url": `${siteURL}/#contacto`,
-            "shippingDetails": {
-              "@type": "OfferShippingDetails",
-              "shippingRate": { "@type": "MonetaryAmount", "currency": "ARS", "value": "0" },
-              "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "AR" },
-              "deliveryTime": {
-                "@type": "ShippingDeliveryTime",
-                "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 2, "unitCode": "DAY" },
-                "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 5, "unitCode": "DAY" }
-              }
-            },
-            "hasMerchantReturnPolicy": {
-              "@type": "MerchantReturnPolicy",
-              "applicableCountry": "AR",
-              "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
-            }
+          "seller": {
+            "@type": "Organization",
+            "name": "Clavos y Alambres Rosario",
+            "url": siteURL
           }
         }
       };
