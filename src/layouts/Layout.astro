@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
-import { productos } from '../data/productos';
 
 interface Props {
   title?: string;
@@ -28,31 +27,16 @@ const jsonLd = {
   "description": "Venta de alambres Acindar, clavos, tejidos, postes y accesorios para campo y construcción. Mayorista y minorista con envíos a todo el país.",
   "areaServed": "AR",
   "priceRange": "$$",
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Catálogo de productos",
-    "itemListElement": productos.map((p, i) => {
-      const esAcindar = p.nombre.toLowerCase().includes('acindar') || (p.detalle ?? '').toLowerCase().includes('acindar');
-      return {
-        "@type": "ListItem",
-        "position": i + 1,
-        "item": {
-          "@type": "Product",
-          "name": p.nombre,
-          "description": p.detalle ? `${p.nombre} — ${p.detalle}` : `${p.nombre}. Disponible en Clavos y Alambres Rosario.`,
-          ...(p.imagenes[0] ? { "image": `${siteURL}/Productos/${p.imagenes[0]}` } : {}),
-          "url": `${siteURL}/#productos`,
-          "category": p.categoria,
-          ...(esAcindar ? { "brand": { "@type": "Brand", "name": "Acindar" } } : {}),
-          "seller": {
-            "@type": "Organization",
-            "name": "Clavos y Alambres Rosario",
-            "url": siteURL
-          }
-        }
-      };
-    }),
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Rosario",
+    "addressRegion": "Santa Fe",
+    "addressCountry": "AR"
   },
+  "sameAs": [
+    "https://www.instagram.com/clavosyalambresrosario/",
+    "https://www.facebook.com/p/Clavos-y-alambres-Rosario-100068872983625/"
+  ]
 };
 ---
 
